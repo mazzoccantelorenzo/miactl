@@ -15,6 +15,10 @@
 
 package extensibility
 
+import (
+	"fmt"
+)
+
 type Order float64
 
 type Context string
@@ -25,11 +29,29 @@ type DestinationArea struct {
 }
 type Languages string
 
-// TODO: Constraint type on these values
 const (
 	En Languages = "en"
 	It Languages = "it"
 )
+
+// IsValid checks if the language is one of the supported values
+func (l Languages) IsValid() bool {
+	switch l {
+	case En, It:
+		return true
+	}
+	return false
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler to constrain parsing
+func (l *Languages) UnmarshalText(text []byte) error {
+	lang := Languages(text)
+	if !lang.IsValid() {
+		return fmt.Errorf("invalid language: %s", lang)
+	}
+	*l = lang
+	return nil
+}
 
 type IntlMessages map[Languages]string
 
