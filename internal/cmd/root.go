@@ -39,6 +39,7 @@ func NewRootCommand() *cobra.Command {
 
 	// initialize clioptions and setup during initialization
 	options := clioptions.NewCLIOptions()
+	clioptions.SetVersion(Version)
 
 	logger := logger.NewLogger(os.Stderr)
 	rootCmd.SetContext(logr.NewContext(context.Background(), logger))

@@ -356,6 +356,13 @@ func (o *CLIOptions) ToRESTConfig() (*client.Config, error) {
 	return clientConfig, nil
 }
 
+var cliVersion = ""
+
+// SetVersion sets the CLI version for the User-Agent header
+func SetVersion(v string) {
+	cliVersion = v
+}
+
 func defaultUserAgent() string {
 	osCommand := os.Args[0]
 	command := "unknown"
@@ -365,5 +372,9 @@ func defaultUserAgent() string {
 
 	os := runtime.GOOS
 	arch := runtime.GOARCH
+
+	if cliVersion != "" {
+		return fmt.Sprintf("%s/%s (%s/%s)", command, cliVersion, os, arch)
+	}
 	return fmt.Sprintf("%s (%s/%s)", command, os, arch)
 }
